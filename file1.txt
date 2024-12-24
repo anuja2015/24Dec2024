@@ -1,2 +1,0 @@
-First file on develop branch on GitLab flow.
-Changing the file from develop branch.
