@@ -1,0 +1,52 @@
+# Node.js
+# Build a general Node.js project with npm.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+
+trigger:
+- master
+
+pool:
+  name: Default
+
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSource: 'spec'
+    versionSpec: '23.x'
+  displayName: 'Install Node.js'
+
+- task: Npm@1
+  inputs:
+    command: 'install'
+    workingDir: '$(Build.SourcesDirectory)/samplenodejs'
+  displayName: 'npm install'
+- task: CmdLine@2
+  inputs:
+    script: 'npm run build'
+    workingDirectory: '$(Build.SourcesDirectory)/samplenodejs'
+  displayName: 'Run application'
+
+- task: CmdLine@2
+  inputs:
+    script: 'npm test -- --reporter mocha-junit-reporter --reporter-options mochaFile=test-results.xml'
+    workingDirectory: '$(Build.SourcesDirectory)/samplenodejs/tests'
+  displayName: 'Run unit tests'
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'JUnit'
+    testResultsFiles: '**/test-*.xml'
+
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '$(Build.SourcesDirectory)'
+    Contents: |
+      samplenodejs/public/*
+      samplenodejs/app.js
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'node24dec'
+    publishLocation: 'Container'
