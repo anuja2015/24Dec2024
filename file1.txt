@@ -1,2 +1,2 @@
-First file on master branch
-Changing the file from develop branch
+First file on develop branch on GitLab flow.
+Changing the file from develop branch.
