@@ -7,7 +7,7 @@ const app = express();
 app.use(express.static('public'))
 
 // Define a port for the server
-const PORT = 3010;
+const PORT = process.env.PORT | 8080;
 
 
 // Start the server and listen on the defined port
